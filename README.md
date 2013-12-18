@@ -28,6 +28,15 @@ Markdown.Extra.init(converter);
 var html = converter.makeHtml("| A | B |\n| :-: | :-: |\n| 1 | 2 |");
 ```
 
+To use this in Node.js with Pagedown:
+
+```javascript
+var pagedown = require("pagedown");
+var converter = new pagedown.Converter();
+var pagedownExtra = require("pagedown-extra");
+pagedownExtra.init(converter);
+```
+
 If you're using multiple converters on the same page, you can just call
 `Markdown.Extra.init` once for each converter and you're all set.
 
