@@ -432,8 +432,8 @@
       body = body.replace(/[|] *$/gm, '');
 
       // determine column alignments
-      var alignspecs = separator.split(/ *[|] */);
-      var align = [];
+      alignspecs = separator.split(/ *[|] */);
+      align = [];
       for (var i = 0; i < alignspecs.length; i++) {
         var spec = alignspecs[i];
         if (spec.match(/^ *-+: *$/m))
