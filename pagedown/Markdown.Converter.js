@@ -1165,7 +1165,7 @@ else
             var end = grafs.length;
             for (var i = 0; i < end; i++) {
                 var str = grafs[i];
-
+                str = str.replace(/\n/g, " ");
                 // if this is an HTML marker, copy it
                 if (markerRe.test(str)) {
                     grafsOut.push(str);
