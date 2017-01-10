@@ -34,11 +34,13 @@ To use this in Node.js with Pagedown:
 var pagedown = require("pagedown");
 var converter = new pagedown.Converter();
 var pagedownExtra = require("pagedown-extra");
-pagedownExtra.init(converter);
+pagedownExtra.Extra.init(converter);
 ```
 
 If you're using multiple converters on the same page, you can just call
 `Markdown.Extra.init` once for each converter and you're all set.
+
+If you have any pre-commit hooks set on a converter, run `init` before adding the hooks.
 
 If you want, you can choose to use only a subset of the extensions currently supported:
 
