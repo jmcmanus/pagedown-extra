@@ -109,6 +109,7 @@ describe("Markdown.Extra", function() {
   var strikethroughHtml = '<p><del>Mistaken text.</del></p>';
   var newlines = 'Roses are red\nViolets are blue';
   var newlinesHtml = '<p>Roses are red <br>\nViolets are blue</p>';
+  var noNewlinesHtml = '<p>Roses are red\nViolets are blue</p>';
 
   // some basic markdown without extensions
   var markdown = "#TestHeader\n_This_ is *markdown*" +
@@ -522,6 +523,19 @@ describe("Markdown.Extra", function() {
       it("should convert new lines properly", function() {
         var html = strip(sconv.makeHtml(newlines));
         expect(html).toEqual(newlinesHtml);
+      });
+
+    });
+
+    describe("exclude newlines", function() {
+      beforeEach(function() {
+        sconv = Markdown.getSanitizingConverter();
+          Markdown.Extra.init(sconv, {extensions: "all", exclude: ["newlines"]});
+      });
+
+      it("should ignore new lines", function() {
+        var html = strip(sconv.makeHtml(newlines));
+        expect(html).toEqual(noNewlinesHtml);
       });
 
     });

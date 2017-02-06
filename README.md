@@ -262,6 +262,10 @@ same naming scheme as the excellent Python Markdown library.
 
 *Italicized extensions are planned, and will be added in roughly the order shown*
 
+You can also enable all but a subset of extensions by using `exclude` to
+list one or more extensions to exclude:
+`{exclude: ["newlines"]}`
+
 See PHP Markdown Extra's [documentation][12] for a more complete overview
 of syntax. In situations where it differs from how things are done on GitHub --
 alignment of table headers, for instance -- I've chosen compatibility with gfm, which

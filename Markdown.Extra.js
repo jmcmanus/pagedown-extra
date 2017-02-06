@@ -120,7 +120,7 @@
     });
     return text;
   }
-  
+
   function slugify(text) {
     return text.toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
@@ -144,7 +144,7 @@
     // Stores html blocks we generate in hooks so that
     // they're not destroyed if the user is using a sanitizing converter
     this.hashBlocks = [];
-    
+
     // Stores footnotes
     this.footnotes = {};
     this.usedFootnotes = [];
@@ -175,6 +175,9 @@
     options.extensions = options.extensions || ["all"];
     if (contains(options.extensions, "all")) {
       options.extensions = ["tables", "fenced_code_gfm", "def_list", "attr_list", "footnotes", "smartypants", "strikethrough", "newlines"];
+    }
+    if (options.exclude) {
+      options.extensions = options.extensions.filter(function(i) {return options.exclude.indexOf(i) < 0;});
     }
     preBlockGamutTransformations.push("wrapHeaders");
     if (contains(options.extensions, "attr_list")) {
@@ -209,7 +212,7 @@
     if (contains(options.extensions, "newlines")) {
       postSpanGamutTransformations.push("newlines");
     }
-    
+
     converter.hooks.chain("postNormalization", function(text) {
       return extra.doTransform(postNormalizationTransformations, text) + '\n';
     });
@@ -268,7 +271,7 @@
   Markdown.Extra.prototype.hashExtraInline = function(block) {
     return '~X' + (this.hashBlocks.push(block) - 1) + 'X';
   };
-  
+
   // Replace placeholder blocks in `text` with their corresponding
   // html blocks in the hashBlocks array.
   Markdown.Extra.prototype.unHashExtraBlocks = function(text) {
@@ -287,7 +290,7 @@
     recursiveUnHash();
     return text;
   };
-  
+
   // Wrap headers to make sure they won't be in def lists
   Markdown.Extra.prototype.wrapHeaders = function(text) {
     function wrap(text) {
@@ -312,11 +315,11 @@
     "(?=[\\-|=]+\\s*(?:\\n|0x03))", "gm"); // underline lookahead
   var fcbAttributes =  new RegExp("^(```[^`\\n]*)[ \\t]+" + attrBlock + "[ \\t]*\\n" +
     "(?=([\\s\\S]*?)\\n```[ \\t]*(\\n|0x03))", "gm");
-      
+
   // Extract headers attribute blocks, move them above the element they will be
   // applied to, and hash them for later.
   Markdown.Extra.prototype.hashHeaderAttributeBlocks = function(text) {
-    
+
     var self = this;
     function attributeCallback(wholeMatch, pre, attr) {
       return '<p>~XX' + (self.hashBlocks.push(attr) - 1) + 'XX</p>\n' + pre + "\n";
@@ -326,7 +329,7 @@
     text = text.replace(hdrAttributesB, attributeCallback);  // underline headers
     return text;
   };
-  
+
   // Extract FCB attribute blocks, move them above the element they will be
   // applied to, and hash them for later.
   Markdown.Extra.prototype.hashFcbAttributeBlocks = function(text) {
@@ -494,7 +497,7 @@
   /******************************************************************
    * Footnotes                                                      *
    *****************************************************************/
-  
+
   // Strip footnote, store in hashes.
   Markdown.Extra.prototype.stripFootnoteDefinitions = function(text) {
     var self = this;
@@ -511,7 +514,7 @@
 
     return text;
   };
-  
+
 
   // Find and convert footnotes references.
   Markdown.Extra.prototype.doFootnotes = function(text) {
@@ -564,8 +567,8 @@
     text += '</ol>\n</div>';
     return text;
   };
-  
-  
+
+
   /******************************************************************
   * Fenced Code Blocks  (gfm)                                       *
   ******************************************************************/
@@ -576,7 +579,7 @@
       code = code.replace(/&/g, "&amp;");
       code = code.replace(/</g, "&lt;");
       code = code.replace(/>/g, "&gt;");
-      // These were escaped by PageDown before postNormalization 
+      // These were escaped by PageDown before postNormalization
       code = code.replace(/~D/g, "$$");
       code = code.replace(/~T/g, "~");
       return code;
@@ -612,7 +615,7 @@
   /******************************************************************
   * SmartyPants                                                     *
   ******************************************************************/
-  
+
   Markdown.Extra.prototype.educatePants = function(text) {
     var self = this;
     var result = '';
@@ -642,7 +645,7 @@
     self.smartyPantsLastChar = result.substring(result.length - 1);
     return result;
   };
-    
+
   function revertPants(wholeMatch, m1) {
     var blockText = m1;
     blockText = blockText.replace(/&\#8220;/g, "\"");
@@ -654,7 +657,7 @@
     blockText = blockText.replace(/&\#8230;/g, "...");
     return blockText;
   }
-  
+
   Markdown.Extra.prototype.applyPants = function(text) {
     // Dashes
     text = text.replace(/---/g, "&#8212;").replace(/--/g, "&#8211;");
@@ -662,7 +665,7 @@
     text = text.replace(/\.\.\./g, "&#8230;").replace(/\.\s\.\s\./g, "&#8230;");
     // Backticks
     text = text.replace(/``/g, "&#8220;").replace (/''/g, "&#8221;");
-    
+
     if(/^'$/.test(text)) {
       // Special case: single-character ' token
       if(/\S/.test(this.smartyPantsLastChar)) {
@@ -690,24 +693,24 @@
 
     // Special case for decade abbreviations (the '80s):
     text = text.replace(/'(?=\d{2}s)/g, "&#8217;");
-    
+
     // Get most opening single quotes:
     text = text.replace(/(\s|&nbsp;|--|&[mn]dash;|&\#8211;|&\#8212;|&\#x201[34];)'(?=\w)/g, "$1&#8216;");
-    
+
     // Single closing quotes:
     text = text.replace(/([^\s\[\{\(\-])'/g, "$1&#8217;");
     text = text.replace(/'(?=\s|s\b)/g, "&#8217;");
 
     // Any remaining single quotes should be opening ones:
     text = text.replace(/'/g, "&#8216;");
-    
+
     // Get most opening double quotes:
     text = text.replace(/(\s|&nbsp;|--|&[mn]dash;|&\#8211;|&\#8212;|&\#x201[34];)"(?=\w)/g, "$1&#8220;");
-    
+
     // Double closing quotes:
     text = text.replace(/([^\s\[\{\(\-])"/g, "$1&#8221;");
     text = text.replace(/"(?=\s)/g, "&#8221;");
-    
+
     // Any remaining quotes should be opening ones.
     text = text.replace(/"/ig, "&#8220;");
     return text;
@@ -721,7 +724,7 @@
     text = text.replace(/(<([a-zA-Z1-6]+)\b([^\n>]*?)(\/)?>)/g, revertPants);
     return text;
   };
-  
+
   /******************************************************************
   * Definition Lists                                                *
   ******************************************************************/
@@ -869,6 +872,6 @@
       return previousTag ? wholeMatch : " <br>\n";
     });
   };
-  
+
 })();
 
