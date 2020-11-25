@@ -1,4 +1,6 @@
-#Overview
+# Overview
+
+**Note: This project is no longer actively maintained.**
 
 This is a collection of [Pagedown][1] plugins to enable support for 
 Markdown Extra syntax. Open `demo/demo.html` to try it yourself.
