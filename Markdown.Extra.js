@@ -583,7 +583,7 @@
     }
 
     var self = this;
-    text = text.replace(/(?:^|\n)```([^`\n]*)\n([\s\S]*?)\n```[ \t]*(?=\n)/g, function(match, m1, m2) {
+    text = text.replace(/(?:^|\n)`{3,}([^`\n]*)\n([\s\S]*?)\n`{3,}[ \t]*(?=\n)/g, function(match, m1, m2) {
       var language = trim(m1), codeblock = m2;
 
       // adhere to specified options
