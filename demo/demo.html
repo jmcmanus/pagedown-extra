@@ -105,6 +105,7 @@ for this editor.
 ```javascript
   Markdown.Extra.init(converter2, {
     extensions: "all",
+    exclude: ["newlines"],
     highlighter: "prettify"
   });
 ```
@@ -114,12 +115,17 @@ for this editor.
         </div>
         <div id="wmd-preview-second" class="wmd-panel wmd-preview"></div>
 
+        <div id="wmd-preview-third" class="wmd-panel">
+        This text will be replaced by Markdown converted to HTML. 
+        </div>
+
         <script type="text/javascript">
             (function () {
 
                 var converter1 = Markdown.getSanitizingConverter();
                 Markdown.Extra.init(converter1, {
                   extensions: "all",
+                  exclude: ["newlines"],
                   highlighter: "prettify"
                 });
 
@@ -137,7 +143,7 @@ for this editor.
                 });
                 
                 // "all" is the default
-                Markdown.Extra.init(converter2, {highlighter: "prettify"});
+                Markdown.Extra.init(converter2, {highlighter: "prettify", exclude: ["newlines"]});
 
                 var help = function () { alert("Do you need help?"); }
                 var options = {
@@ -148,7 +154,21 @@ for this editor.
                 editor2.hooks.chain("onPreviewRefresh", prettyPrint); // google code prettify
                 
                 editor2.run();
+
+                // show simpler example without the editor, just DOM manipulation.
+                var text = 'See more at **[pagedown-extra on GitHub](https://github.com/DavidBiesack/pagedown-extra)**'
+                var converter = new Markdown.Converter();
+                // tell the converter to use Markdown Extra
+                Markdown.Extra.init(converter);
+                // convert some markdown
+                var html = converter.makeHtml(text);
+                // and put it into the current HTML docuemmt; in this case,
+                // inside the element with id 'wmd-preview-third'
+                document.getElementById("wmd-preview-third").innerHTML=html
+
             })();
+
+
         </script>
     </body>
 </html>
